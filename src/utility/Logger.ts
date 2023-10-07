@@ -1,0 +1,42 @@
+import * as fs from "fs";
+import path from "path";
+import dayjs from "dayjs";
+
+export enum LogLevels {
+    LOG_DEFAULT = "\x1b[37m",
+    LOG_INFO = "\x1b[36m",
+    LOG_SUCCESS = "\x1b[32m",
+    LOG_WARN = "\x1b[33m",
+    LOG_ERROR = "\x1b[31m",
+}
+
+const reset_string = "\x1b[0m";
+
+function log(LogLevel = LogLevels.LOG_DEFAULT, message: string, showDate: boolean = false, customPre: string | null = null) {
+    if (customPre == null) {
+        console.log(LogLevel + (showDate ? `[ ${dayjs().format("DD.MM.YYYY HH:mm:ss")} ] `: "") + message + reset_string);
+    } else {
+        console.log(LogLevel + `[ ${customPre} ] ` + message + reset_string);
+    }
+}
+
+function logToFile(message: string | undefined, fileName: string = "error.log") {
+    const pre = `==================================== ${dayjs().format("DD.MM.YYYY HH:mm:ss")} ====================================\n`;
+    fs.writeFileSync("log/" + fileName, message ? pre + message + "\n\n": "", { flag: "a+"});
+}
+
+async function clearLogEntries() {
+    const directory = "log";
+
+    fs.readdir(directory, (err, files) => {
+        if (err) throw err;
+
+        for ( const file of files) {
+            fs.writeFile(path.resolve(directory, file), "", {flag: "w+"}, err =>{
+                if (err) throw err;
+            });
+        }
+    });
+}
+
+export default { log, logToFile, clearLogEntries}
