@@ -1,9 +1,9 @@
-export type VatsimScopes = Array<"full_name" | "vatsim_details" | "email" | "country">
+export type VatsimScopes = Array<"full_name" | "vatsim_details" | "email" | "country">;
 
 export type VatsimOauthToken = {
     scopes: Array<string>;
     token_type: string;
-    expires_is: number;
+    expires_in: number;
     access_token: string;
     refresh_token?: string;
 };
@@ -45,7 +45,7 @@ export type VatsimUserData = {
                 name: string;
             };
         };
-        ouath: {
+        oauth: {
             token_valid: string;
         };
     };
